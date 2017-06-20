@@ -15,7 +15,7 @@ module.exports = function (addr, opts) {
   var location = typeof window === 'undefined' ? {} : window.location
 
   var url = wsurl(addr, location)
-  var socket = new WebSocket(url)
+  var socket = new WebSocket(url, opts.auth_token || 'xxxx')
 
   var stream = duplex(socket, opts)
   stream.remoteAddress = url
