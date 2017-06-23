@@ -17,6 +17,7 @@ module.exports = function (addr, opts) {
   var url = wsurl(addr, location)
 
   var socket
+
   if (opts && opts.hasOwnProperty('auth_token')) {
     socket = new WebSocket(url, opts.auth_token || 'xxxx')
   } else {
