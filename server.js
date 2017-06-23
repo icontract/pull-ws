@@ -41,11 +41,29 @@ module.exports = function (opts, onConnection) {
   proxy(server, 'request')
   proxy(server, 'close')
 
+  function heartbeat () {
+    console.log('hearbeat.')
+    this.isAlive = true
+  }
+
   wsServer.on('connection', function (socket) {
+    socket.isAlive = true;
+    socket.on('pong', heartbeat);
     var stream = ws(socket)
     stream.remoteAddress = socket.upgradeReq.socket.remoteAddress
     emitter.emit('connection', stream)
   })
+
+  var interval = setInterval(function ping() {
+    wsServer.clients.forEach(function each(ws) {
+      if (ws.isAlive === false) {
+        console.log('debug is alive.')
+        return ws.terminate();
+      }
+      ws.isAlive = false;
+      ws.ping('', false, true);
+    });
+  }, 30000);
 
   emitter.listen = function (addr, onListening) {
     if(onListening)
@@ -55,10 +73,12 @@ module.exports = function (opts, onConnection) {
   }
 
   emitter.close = function (onClose) {
+    clearInterval(interval);
     server.close(onClose)
     wsServer.close()
     return emitter
   }
+
   return emitter
 }
 
