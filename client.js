@@ -35,7 +35,6 @@ module.exports = function (addr, opts) {
 
   socket.addEventListener('open', function (e) {
     if (opts && isFunction(opts.onConnect)) {
-      stream.setKeepAlive(true);
       opts.onConnect(null, stream)
     }
   })
