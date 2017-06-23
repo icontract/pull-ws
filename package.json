@@ -25,7 +25,7 @@
   "homepage": "https://github.com/DamonOehlman/pull-ws",
   "dependencies": {
     "relative-url": "^1.0.2",
-    "ws": "git://github.com/m-onz/ws.git"
+    "ws": "^3.0.0"
   },
   "devDependencies": {
     "mapleTree": "^0.5.1",

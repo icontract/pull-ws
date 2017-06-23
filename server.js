@@ -34,8 +34,7 @@ module.exports = function (opts, onConnection) {
   var wsServer = new WebSocket.Server({
     server: server,
     perMessageDeflate: false,
-    verifyClient: opts.verifyClient,
-    keepAlive: true
+    verifyClient: opts.verifyClient
   })
 
   proxy(server, 'listening')
