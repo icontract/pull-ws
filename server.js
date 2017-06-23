@@ -42,13 +42,7 @@ module.exports = function (opts, onConnection) {
   proxy(server, 'request')
   proxy(server, 'close')
 
-  function heartbeat () {
-    this.isAlive = true
-  }
-
   wsServer.on('connection', function (socket) {
-    socket.isAlive = true
-    socket.on('pong', heartbeat)
     var stream = ws(socket)
     stream.remoteAddress = socket.upgradeReq.socket.remoteAddress
     emitter.emit('connection', stream)
@@ -61,19 +55,7 @@ module.exports = function (opts, onConnection) {
     return emitter
   }
 
-  var interval = setInterval(function ping () { 
-    wsServer.clients.forEach(function each(ws) {
-      if (ws.isAlive === false) {
-        console.log('terminated connection [debug]')
-        return ws.terminate();
-      }
-      ws.isAlive = false;
-      ws.ping('', false, true);
-    });
-  }, 30000)
-
   emitter.close = function (onClose) {
-    clearInterval(interval)
     server.close(onClose)
     wsServer.close()
     return emitter
